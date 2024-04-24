@@ -58,6 +58,7 @@ TORCH_EXTENSION = "lltm_ext"
 #wheel.expand-macos-universal-tags = true
 cmake.verbose = true
 cmake.build-type = "Release"
+logging.level = "INFO"
 
 
 [tool.pytest.ini_options]

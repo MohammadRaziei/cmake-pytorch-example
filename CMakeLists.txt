@@ -62,6 +62,8 @@ find_package(Python REQUIRED COMPONENTS Interpreter Development.Module)
 
 python_add_library(${TORCH_EXTENSION} MODULE ${PROJECT_SOURCE_DIR}/src/binding/bind.cpp WITH_SOABI)
 target_sources(${TORCH_EXTENSION} PRIVATE ${SOURCES})
+set_property(TARGET ${TORCH_EXTENSION} PROPERTY INTERFACE_LINK_LIBRARIES ${TORCH_INTERFACE_LIB})
+target_link_libraries(${TORCH_EXTENSION} PRIVATE ${TORCH_LIBRARIES} Python::Module)
 
 #python_extension_module(lltm_ext)
 target_compile_definitions(${TORCH_EXTENSION} PRIVATE
@@ -73,6 +75,7 @@ target_include_directories(${TORCH_EXTENSION}
         ${PROJECT_SOURCE_DIR}/include
         PRIVATE
         ${PROJECT_SOURCE_DIR}/src)
+
 
 #install(TARGETS lltm_ext DESTINATION src/lltm)
 install(TARGETS ${TORCH_EXTENSION}
