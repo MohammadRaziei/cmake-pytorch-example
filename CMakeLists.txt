@@ -17,7 +17,7 @@ message(STATUS "Project: ${PROJECT_NAME}@v${PROJECT_VERSION}")
 
 set(CMAKE_CXX_STANDARD 17 CACHE STRING "C++ version selection")
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-add_compile_options(-O3 -fPIC)
+#add_compile_options(-O3 -fPIC)
 
 
 
@@ -64,6 +64,7 @@ python_add_library(${TORCH_EXTENSION} MODULE ${PROJECT_SOURCE_DIR}/src/binding/b
 target_sources(${TORCH_EXTENSION} PRIVATE ${SOURCES})
 set_property(TARGET ${TORCH_EXTENSION} PROPERTY INTERFACE_LINK_LIBRARIES ${TORCH_INTERFACE_LIB})
 target_link_libraries(${TORCH_EXTENSION} PRIVATE ${TORCH_LIBRARIES} Python::Module)
+message(STATUS ${TORCH_LIBRARIES})
 
 #python_extension_module(lltm_ext)
 target_compile_definitions(${TORCH_EXTENSION} PRIVATE
@@ -73,8 +74,11 @@ target_compile_definitions(${TORCH_EXTENSION} PRIVATE
 target_include_directories(${TORCH_EXTENSION}
         PUBLIC
         ${PROJECT_SOURCE_DIR}/include
+        ${TORCH_INCLUDE_DIRS}
         PRIVATE
         ${PROJECT_SOURCE_DIR}/src)
+
+set_target_properties(${TORCH_EXTENSION} PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 
 
 #install(TARGETS lltm_ext DESTINATION src/lltm)

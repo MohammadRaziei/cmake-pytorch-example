@@ -1,5 +1,4 @@
 find_program( Python_EXECUTABLE python python3)
-message(${Python_EXECUTABLE})
 message(STATUS "Checking for PyTorch using ${Python_EXECUTABLE} ...")
 execute_process(
         COMMAND "${Python_EXECUTABLE}"

@@ -1,5 +1,5 @@
-import torch
-from torch.utils.cpp_extension import load
+from __future__ import annotations
 
-import torch._C
+import torch
+
 from .lltm_ext import __version__
