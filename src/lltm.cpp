@@ -2,6 +2,11 @@
 
 #include <vector>
 
+torch::Tensor lltm_add(const torch::Tensor& inp1, const torch::Tensor& inp2){
+    return inp1 + inp2;
+}
+
+
 // s'(z) = (1 - s(z)) * s(z)
 torch::Tensor d_sigmoid(torch::Tensor z) {
   auto s = torch::sigmoid(z);

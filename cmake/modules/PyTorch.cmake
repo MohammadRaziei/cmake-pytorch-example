@@ -97,3 +97,28 @@ message(STATUS "Created: torch::torch")
 #
 #
 
+
+# --- Step: Find torch_python library ---
+find_library(TORCH_PYTHON_LIBRARY
+        NAMES torch_python
+        PATHS "${TORCH_INSTALL_PREFIX}/lib"
+        NO_DEFAULT_PATH)
+
+if(TORCH_PYTHON_LIBRARY AND EXISTS "${TORCH_PYTHON_LIBRARY}")
+    message(STATUS "Found torch_python: ${TORCH_PYTHON_LIBRARY}")
+
+    # Create an IMPORTED STATIC target for torch_python
+    if(NOT TARGET torch::python)
+        add_library(torch::python UNKNOWN IMPORTED)
+
+        set_target_properties(torch::python PROPERTIES
+                IMPORTED_LOCATION "${TORCH_PYTHON_LIBRARY}"
+                INTERFACE_INCLUDE_DIRECTORIES "${TORCH_INSTALL_PREFIX}/include/torch/csrc/api/include"
+                INTERFACE_LINK_LIBRARIES "torch"
+        )
+
+        message(STATUS "Created imported target: torch::python")
+    endif()
+else()
+    message(WARNING "torch_python not found in ${TORCH_INSTALL_PREFIX}/lib")
+endif()

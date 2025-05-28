@@ -4,7 +4,7 @@
 #include <vector>
 
 
-
+torch::Tensor lltm_add(const torch::Tensor& inp1, const torch::Tensor& inp2);
 
 std::vector<torch::Tensor> lltm_forward(
     torch::Tensor input,
