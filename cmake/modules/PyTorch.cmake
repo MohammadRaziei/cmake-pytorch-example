@@ -1,6 +1,9 @@
 # Looking for a Python executable
-message(STATUS "Looking for a Python executable...")
-find_program(Python_EXECUTABLE python python3)
+# message(STATUS "Looking for a Python executable...")
+# find_program(Python_EXECUTABLE python python3)
+
+find_package(Python REQUIRED COMPONENTS Interpreter)
+
 
 if(Python_EXECUTABLE)
     message(STATUS "Found Python executable: ${Python_EXECUTABLE}")
