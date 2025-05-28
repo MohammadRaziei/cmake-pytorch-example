@@ -1,4 +1,5 @@
-#include "torch.h"
+#include <torch/torch.h>
+
 
 #include <vector>
 

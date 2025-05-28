@@ -22,17 +22,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
 include(PyTorch)
-find_package(Torch REQUIRED)
-message(STATUS "Torch_VERSION = ${Torch_VERSION}")
 
-set(Torch_Min_Version "1.8")
-if(Torch_VERSION VERSION_LESS Torch_Min_Version)
-    message(FATAL_ERROR "${PROJECT_NAME} only supports PyTorch >= ${Torch_Min_Version}")
-endif()
-
-set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS})
-link_libraries(${TORCH_LIBRARIES})
-include_directories( ${TORCH_INCLUDE_DIRS})
+#set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS})
+#link_libraries(${TORCH_LIBRARIES})
+#include_directories( ${TORCH_INCLUDE_DIRS})
 
 # tweak torch dependencies, see https://github.com/pytorch/pytorch/issues/33928
 #get_target_property(TORCH_INTERFACE_LIB torch INTERFACE_LINK_LIBRARIES)
@@ -46,14 +39,15 @@ file(GLOB SOURCES ${PROJECT_SOURCE_DIR}/src/*.cpp)
 #
 
 
-add_library(lltm SHARED
-        ${SOURCES}
-)
+
+
+add_library(lltm STATIC ${SOURCES})
 target_include_directories(lltm
         PUBLIC
         ${PROJECT_SOURCE_DIR}/include
         PRIVATE
         ${PROJECT_SOURCE_DIR}/src)
+target_link_libraries(lltm PUBLIC torch::torch)
 
 
 if(DEFINED SKBUILD)
@@ -62,8 +56,8 @@ find_package(Python REQUIRED COMPONENTS Interpreter Development.Module)
 
 python_add_library(${TORCH_EXTENSION} MODULE ${PROJECT_SOURCE_DIR}/src/binding/bind.cpp WITH_SOABI)
 target_sources(${TORCH_EXTENSION} PRIVATE ${SOURCES})
-set_property(TARGET ${TORCH_EXTENSION} PROPERTY INTERFACE_LINK_LIBRARIES ${TORCH_INTERFACE_LIB})
-target_link_libraries(${TORCH_EXTENSION} PRIVATE ${TORCH_LIBRARIES} Python::Module)
+#set_property(TARGET ${TORCH_EXTENSION} PROPERTY INTERFACE_LINK_LIBRARIES ${TORCH_INTERFACE_LIB})
+target_link_libraries(${TORCH_EXTENSION} PRIVATE torch::torch Python::Module)
 message(STATUS ${TORCH_LIBRARIES})
 
 #python_extension_module(lltm_ext)
@@ -92,7 +86,7 @@ endif()
 
 add_executable(example ${PROJECT_SOURCE_DIR}/examples/main.cpp)
 
-target_link_libraries(example PRIVATE lltm)
+target_link_libraries(example PRIVATE lltm torch)
 
 
 
